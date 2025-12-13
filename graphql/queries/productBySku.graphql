@@ -1,0 +1,25 @@
+query ProductBySku($sku: String!) {
+  products(filter: { sku: { eq: $sku } }, pageSize: 1) {
+    items {
+      id
+      sku
+      name
+      description {
+        html
+      }
+      media_gallery_entries {
+        id
+        file
+        label
+      }
+      price_range {
+        minimum_price {
+          regular_price {
+            value
+            currency
+          }
+        }
+      }
+    }
+  }
+}

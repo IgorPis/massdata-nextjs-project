@@ -1,0 +1,12 @@
+schema: https://backend.reachdigital.dev/graphql
+documents: "graphql/**/*.graphql"
+generates:
+  ./graphql/generated.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHooks: true
+      withHOC: false
+      withComponent: false

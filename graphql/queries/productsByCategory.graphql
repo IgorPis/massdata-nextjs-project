@@ -1,0 +1,22 @@
+query ProductsByCategory($categoryId: String!, $limit: Int = 24) {
+  products(filter: { category_id: { eq: $categoryId } }, pageSize: $limit) {
+    items {
+      id
+      sku
+      name
+      url_key
+      small_image {
+        url
+        label
+      }
+      price_range {
+        minimum_price {
+          regular_price {
+            value
+            currency
+          }
+        }
+      }
+    }
+  }
+}

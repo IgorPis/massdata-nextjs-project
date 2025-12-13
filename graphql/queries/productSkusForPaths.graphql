@@ -1,0 +1,7 @@
+query ProductSkusForPaths($limit: Int = 50) {
+  products(pageSize: $limit) {
+    items {
+      sku
+    }
+  }
+}

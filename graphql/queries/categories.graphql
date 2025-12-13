@@ -1,0 +1,19 @@
+query Categories {
+  categories {
+    items {
+      id
+      name
+      url_key
+      children {
+        id
+        name
+        url_key
+        children {
+          id
+          name
+          url_key
+        }
+      }
+    }
+  }
+}

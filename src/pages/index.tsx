@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { Box, Button, Container, Typography } from "@mui/material";
 import type { GetServerSideProps } from "next";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -61,89 +62,115 @@ export default function Home({
         sx={{
           position: "relative",
           width: "100%",
-          minHeight: { xs: 420, md: 560 },
+          minHeight: { xs: 360, md: 520 },
           overflow: "hidden",
-          borderRadius: { xs: 0, md: 4 },
+          borderRadius: 0, // <- no rounded corners
           mb: { xs: 4, md: 6 },
         }}
       >
+        {/* Background image */}
+        <Image
+          src="/hero.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+        />
+
+        {/* Dark overlay for readability */}
         <Box
           sx={{
             position: "absolute",
             inset: 0,
-            backgroundImage: "url(/hero.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            transform: "scale(1.02)",
-            filter: "saturate(1.1) contrast(1.05)",
+            bgcolor: "rgba(0,0,0,0.35)",
           }}
         />
 
+        {/* Gradient (stronger on the left where text is) */}
         <Box
           sx={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.18) 65%, rgba(0,0,0,0.05) 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.10) 100%)",
           }}
         />
 
         <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
-          <Typography
-            variant="overline"
-            sx={{ letterSpacing: 2, opacity: 0.85, color: "common.white" }}
-          >
-            A STEP INTO STYLE
-          </Typography>
-
-          <Typography
-            component="h1"
+          {/* Optional panel behind text (kept square) */}
+          <Box
             sx={{
-              mt: 1,
-              fontWeight: 900,
-              lineHeight: 0.95,
-              fontSize: { xs: 44, sm: 56, md: 72 },
-              letterSpacing: "-0.02em",
-              color: "common.white",
-              maxWidth: 760,
+              maxWidth: { xs: "100%", md: "fit-content" },
+              p: { xs: 2.5, md: 3.5 },
+              bgcolor: "rgba(0,0,0,0.22)",
+              border: "1px solid rgba(255,255,255,0.10)",
+              borderRadius: 0, // <- keep it square
+              backdropFilter: "blur(2px)",
             }}
           >
-            DISCOVER COMFORT
-            <br />
-            BEYOND ORDINARY.
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 2,
-              maxWidth: 560,
-              color: "rgba(255,255,255,0.85)",
-              fontSize: { xs: 14, sm: 16 },
-            }}
-          >
-            Explore curated sock collections and standout designs. There’s a
-            pair for everyone.
-          </Typography>
-
-          <Box sx={{ mt: 3, display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-            <Button
-              variant="contained"
-              color="inherit"
-              component={Link}
-              href={primaryCatId ? `/category/${primaryCatId}` : "/"}
+            <Typography
+              variant="overline"
+              sx={{
+                letterSpacing: 2,
+                opacity: 0.95,
+                color: "common.white",
+                textShadow: "0 2px 12px rgba(0,0,0,0.7)",
+              }}
             >
-              Shop now
-            </Button>
+              A STEP INTO STYLE
+            </Typography>
 
-            <Button
-              variant="outlined"
-              color="inherit"
-              component={Link}
-              href={topCats[1]?.id ? `/category/${topCats[1].id}` : "/"}
-              sx={{ borderColor: "rgba(255,255,255,0.6)" }}
+            <Typography
+              component="h1"
+              sx={{
+                mt: 1,
+                fontWeight: 900,
+                lineHeight: 0.95,
+                fontSize: { xs: 44, sm: 56, md: 72 },
+                letterSpacing: "-0.02em",
+                color: "common.white",
+                textShadow: "0 4px 18px rgba(0,0,0,0.75)",
+              }}
             >
-              Browse categories
-            </Button>
+              DISCOVER COMFORT
+              <br />
+              BEYOND ORDINARY.
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 2,
+                maxWidth: 560,
+                color: "rgba(255,255,255,0.92)",
+                fontSize: { xs: 14, sm: 16 },
+                textShadow: "0 2px 12px rgba(0,0,0,0.75)",
+              }}
+            >
+              Explore curated sock collections and standout designs. There’s a
+              pair for everyone.
+            </Typography>
+
+            <Box sx={{ mt: 3, display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+              <Button
+                variant="contained"
+                color="inherit"
+                component={Link}
+                href={primaryCatId ? `/category/${primaryCatId}` : "/"}
+              >
+                Shop now
+              </Button>
+
+              <Button
+                variant="outlined"
+                color="inherit"
+                component={Link}
+                href={topCats[1]?.id ? `/category/${topCats[1].id}` : "/"}
+                sx={{ borderColor: "rgba(255,255,255,0.7)" }}
+              >
+                Browse categories
+              </Button>
+            </Box>
           </Box>
         </Container>
       </Box>

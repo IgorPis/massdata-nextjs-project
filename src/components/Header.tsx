@@ -47,6 +47,12 @@ const isVisibleCategory = (c: Category | null | undefined): c is Category => {
   return true;
 };
 
+const isSaleCategory = (cat: Category) => {
+  const name = (cat.name ?? "").toLowerCase();
+  const urlKey = (cat.url_key ?? "").toLowerCase();
+  return name === "sale" || urlKey === "sale";
+};
+
 export default function Header({ categories }: { categories: Category[] }) {
   const router = useRouter();
 
@@ -73,7 +79,7 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   return (
     <Box component="header">
-      <AppBar position="sticky" elevation={1} sx={{ borderRadius: 0 }}>
+      <AppBar position="fixed" elevation={1} sx={{ borderRadius: 0 }}>
         {/* Top row */}
         <Toolbar sx={{ gap: 2 }}>
           {isMobile && (
@@ -165,23 +171,13 @@ export default function Header({ categories }: { categories: Category[] }) {
             {/* Desktop-only icons */}
             {!isMobile && (
               <>
-                <IconButton
-                  aria-label="cart"
-                  color="inherit"
-                  component={Link}
-                  href="/cart"
-                >
+                <IconButton aria-label="cart" color="inherit">
                   <Badge badgeContent={count} color="error">
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>
 
-                <IconButton
-                  aria-label="profile"
-                  color="inherit"
-                  component={Link}
-                  href="/account"
-                >
+                <IconButton aria-label="profile" color="inherit">
                   <AccountCircleIcon />
                 </IconButton>
               </>
@@ -196,28 +192,53 @@ export default function Header({ categories }: { categories: Category[] }) {
             aria-label="categories"
             sx={{ gap: 2, overflowX: "auto", minHeight: 44 }}
           >
-            {topCats.map((cat) => (
-              <Box key={String(cat.id)} sx={{ whiteSpace: "nowrap" }}>
-                <Box
-                  component="button"
-                  onClick={() => openCategory(cat)}
-                  aria-label={`Open category ${cat.name ?? ""}`}
-                  sx={{
-                    all: "unset",
-                    cursor: "pointer",
-                    px: 1.25,
-                    py: 1,
-                    fontSize: { xs: 16, md: 18 },
-                    fontWeight: 600,
-                    color: "inherit",
-                    lineHeight: 1,
-                    "&:hover": { opacity: 0.85 },
-                  }}
-                >
-                  {cat.name}
+            {topCats.map((cat) => {
+              const href = `/category/${cat.id}`;
+
+              return (
+                <Box key={String(cat.id)} sx={{ whiteSpace: "nowrap" }}>
+                  {isSaleCategory(cat) ? (
+                    <Box
+                      component={Link}
+                      href={href}
+                      aria-label={`Go to category ${cat.name ?? ""}`}
+                      sx={{
+                        textDecoration: "none",
+                        color: "inherit",
+                        display: "inline-block",
+                        px: 1.25,
+                        py: 1,
+                        fontSize: { xs: 16, md: 18 },
+                        fontWeight: 600,
+                        lineHeight: 1,
+                        "&:hover": { opacity: 0.85 },
+                      }}
+                    >
+                      {cat.name}
+                    </Box>
+                  ) : (
+                    <Box
+                      component="button"
+                      onClick={() => openCategory(cat)}
+                      aria-label={`Open category ${cat.name ?? ""}`}
+                      sx={{
+                        all: "unset",
+                        cursor: "pointer",
+                        px: 1.25,
+                        py: 1,
+                        fontSize: { xs: 16, md: 18 },
+                        fontWeight: 600,
+                        color: "inherit",
+                        lineHeight: 1,
+                        "&:hover": { opacity: 0.85 },
+                      }}
+                    >
+                      {cat.name}
+                    </Box>
+                  )}
                 </Box>
-              </Box>
-            ))}
+              );
+            })}
           </Toolbar>
         )}
 
@@ -282,14 +303,25 @@ export default function Header({ categories }: { categories: Category[] }) {
               {/* If no active category -> show top categories */}
               {!activeCategory && (
                 <List disablePadding>
-                  {topCats.map((cat) => (
-                    <ListItemButton
-                      key={String(cat.id)}
-                      onClick={() => openCategory(cat)}
-                    >
-                      <ListItemText primary={cat.name} />
-                    </ListItemButton>
-                  ))}
+                  {topCats.map((cat) =>
+                    isSaleCategory(cat) ? (
+                      <ListItemButton
+                        key={String(cat.id)}
+                        component={Link}
+                        href={`/category/${cat.id}`}
+                        onClick={() => setDrawerOpen(false)}
+                      >
+                        <ListItemText primary={cat.name} />
+                      </ListItemButton>
+                    ) : (
+                      <ListItemButton
+                        key={String(cat.id)}
+                        onClick={() => openCategory(cat)}
+                      >
+                        <ListItemText primary={cat.name} />
+                      </ListItemButton>
+                    )
+                  )}
                 </List>
               )}
 
@@ -333,29 +365,11 @@ export default function Header({ categories }: { categories: Category[] }) {
                   <Divider sx={{ my: 1 }} />
                   <List disablePadding>
                     {/* Account first */}
-                    <ListItemButton
-                      component={Link}
-                      href="/account"
-                      onClick={() => setDrawerOpen(false)}
-                    >
+                    <ListItemButton onClick={() => setDrawerOpen(true)}>
                       <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
                         <AccountCircleIcon />
                       </ListItemIcon>
                       <ListItemText primary="Account" />
-                    </ListItemButton>
-
-                    {/* Cart second */}
-                    <ListItemButton
-                      component={Link}
-                      href="/cart"
-                      onClick={() => setDrawerOpen(false)}
-                    >
-                      <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
-                        <Badge badgeContent={count} color="error">
-                          <ShoppingCartIcon />
-                        </Badge>
-                      </ListItemIcon>
-                      <ListItemText primary="Cart" />
                     </ListItemButton>
                   </List>
                 </>
@@ -412,6 +426,41 @@ export default function Header({ categories }: { categories: Category[] }) {
           </Box>
         </Drawer>
       </AppBar>
+      <Toolbar />
+      {!isMobile && <Toolbar sx={{ minHeight: 44 }} />}
+
+      {/* Mobile floating cart button */}
+      {isMobile && (
+        <Box
+          sx={{
+            position: "fixed",
+            right: 16,
+            bottom: 16,
+            zIndex: (t) => t.zIndex.modal + 1, // above drawers/modals
+          }}
+        >
+          <IconButton
+            aria-label="cart"
+            onClick={() => {
+              // intentionally no navigation (assignment requirement)
+            }}
+            sx={{
+              width: 52,
+              height: 52,
+              borderRadius: "999px",
+              bgcolor: "rgba(0,0,0,0.65)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              boxShadow: 6,
+              "&:hover": { bgcolor: "rgba(0,0,0,0.75)" },
+            }}
+          >
+            <Badge badgeContent={count} color="error">
+              <ShoppingCartIcon sx={{ color: "white" }} />
+            </Badge>
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 }

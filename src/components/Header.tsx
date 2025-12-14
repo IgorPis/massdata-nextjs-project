@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -7,17 +7,21 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InputBase from "@mui/material/InputBase";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useReactiveVar } from "@apollo/client";
 import { cartVar } from "@/lib/cart";
 import type { Category } from "@/types/graphql";
@@ -44,16 +48,19 @@ const isVisibleCategory = (c: Category | null | undefined): c is Category => {
 };
 
 export default function Header({ categories }: { categories: Category[] }) {
+  const router = useRouter();
+
   const cart = useReactiveVar(cartVar);
   const count = cart.reduce((s, i) => s + i.qty, 0);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [activeCategory, setActiveCategory] = React.useState<Category | null>(
-    null
-  );
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<Category | null>(null);
+
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const topCats = (categories ?? []).filter(isVisibleCategory).slice(0, 10);
 
@@ -91,7 +98,7 @@ export default function Header({ categories }: { categories: Category[] }) {
               color: "inherit",
               fontWeight: 800,
               letterSpacing: "-0.02em",
-              fontSize: { xs: 20, sm: 22, md: 24 }, // bigger
+              fontSize: { xs: 20, sm: 22, md: 24 },
               lineHeight: 1,
             }}
           >
@@ -103,48 +110,82 @@ export default function Header({ categories }: { categories: Category[] }) {
 
           {/* Right-side group (search + icons) */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Box
-              component="form"
-              role="search"
-              onSubmit={(e) => e.preventDefault()}
-              sx={{
-                width: { xs: 170, sm: 240, md: 320 }, // shorter
-                display: "flex",
-                alignItems: "center",
-                bgcolor: "rgba(255,255,255,0.14)", // lighter on dark header
-                border: "1px solid rgba(255,255,255,0.18)",
-                borderRadius: 999,
-                px: 1.25,
-                py: 0.25,
-                transition: "all .15s ease",
-                "&:focus-within": {
-                  bgcolor: "rgba(255,255,255,0.20)",
-                  borderColor: "rgba(255,255,255,0.35)",
-                },
-              }}
-            >
-              <SearchIcon sx={{ opacity: 0.9 }} />
-              <InputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-                sx={{
-                  color: "inherit",
-                  ml: 1,
-                  width: "100%",
-                  "& input::placeholder": { opacity: 0.7 },
+            {isMobile ? (
+              // Mobile: search icon only
+              <IconButton
+                aria-label="open search"
+                color="inherit"
+                onClick={() => setSearchOpen(true)}
+              >
+                <SearchIcon />
+              </IconButton>
+            ) : (
+              // Desktop: full search bar
+              <Box
+                component="form"
+                role="search"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const q = searchValue.trim();
+                  if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
+                  else router.push("/search");
                 }}
-              />
-            </Box>
+                sx={{
+                  width: { xs: 170, sm: 240, md: 320 },
+                  display: "flex",
+                  alignItems: "center",
+                  bgcolor: "rgba(255,255,255,0.14)",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  borderRadius: 999,
+                  px: 1.25,
+                  py: 0.25,
+                  transition: "all .15s ease",
+                  "&:focus-within": {
+                    bgcolor: "rgba(255,255,255,0.20)",
+                    borderColor: "rgba(255,255,255,0.35)",
+                  },
+                }}
+              >
+                <SearchIcon sx={{ opacity: 0.9 }} />
+                <InputBase
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  placeholder="Search…"
+                  inputProps={{ "aria-label": "search" }}
+                  sx={{
+                    color: "inherit",
+                    ml: 1,
+                    width: "100%",
+                    "& input::placeholder": { opacity: 0.7 },
+                  }}
+                />
+              </Box>
+            )}
 
-            <IconButton aria-label="cart" color="inherit">
-              <Badge badgeContent={count} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+            {/* Desktop-only icons */}
+            {!isMobile && (
+              <>
+                <IconButton
+                  aria-label="cart"
+                  color="inherit"
+                  component={Link}
+                  href="/cart"
+                >
+                  <Badge badgeContent={count} color="error">
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
 
-            <IconButton aria-label="profile" color="inherit">
-              <AccountCircleIcon />
-            </IconButton>
+                <IconButton
+                  aria-label="profile"
+                  color="inherit"
+                  component={Link}
+                  href="/account"
+                >
+                  <AccountCircleIcon />
+                </IconButton>
+              </>
+            )}
           </Box>
         </Toolbar>
 
@@ -166,7 +207,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                     cursor: "pointer",
                     px: 1.25,
                     py: 1,
-                    fontSize: { xs: 16, md: 18 }, // 👈 bigger
+                    fontSize: { xs: 16, md: 18 },
                     fontWeight: 600,
                     color: "inherit",
                     lineHeight: 1,
@@ -180,6 +221,7 @@ export default function Header({ categories }: { categories: Category[] }) {
           </Toolbar>
         )}
 
+        {/* Left drawer: categories + (mobile) account/cart right under them */}
         <Drawer
           anchor="left"
           open={drawerOpen}
@@ -195,58 +237,179 @@ export default function Header({ categories }: { categories: Category[] }) {
           }}
           aria-label="Category menu"
         >
-          <Box sx={{ p: 2 }}>
-            <Typography variant="h6">
-              {activeCategory?.name ? activeCategory.name : "Categories"}
-            </Typography>
-          </Box>
-          <Divider />
+          <Box
+            sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
+            {/* Header row with back + title + close */}
+            <Box
+              sx={{
+                p: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 1,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {activeCategory && (
+                  <IconButton
+                    aria-label="back to categories"
+                    onClick={() => setActiveCategory(null)}
+                    size="small"
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                )}
 
-          {/* If no active category -> show top categories */}
-          {!activeCategory && (
-            <List>
-              {topCats.map((cat) => (
-                <ListItemButton
-                  key={String(cat.id)}
-                  onClick={() => openCategory(cat)}
-                >
-                  <ListItemText primary={cat.name} />
-                </ListItemButton>
-              ))}
-            </List>
-          )}
+                <Typography variant="h6" sx={{ lineHeight: 1 }}>
+                  {activeCategory?.name ? activeCategory.name : "Categories"}
+                </Typography>
+              </Box>
 
-          {/* If active category  show subcategories OR link to product list */}
-          {activeCategory && (
-            <List>
-              <ListItemButton
-                component={Link}
-                href={`/category/${activeCategory.id}`}
+              <IconButton
+                aria-label="close menu"
                 onClick={() => setDrawerOpen(false)}
+                size="small"
               >
-                <ListItemText primary={`View all in ${activeCategory.name}`} />
-              </ListItemButton>
+                <CloseIcon />
+              </IconButton>
+            </Box>
 
-              <Divider sx={{ my: 1 }} />
+            <Divider />
 
-              {subcats.length > 0 ? (
-                subcats.map((sub) => (
+            {/* Everything scrolls together (so Account/Cart stay just below the categories list) */}
+            <Box sx={{ flex: 1, overflowY: "auto" }}>
+              {/* If no active category -> show top categories */}
+              {!activeCategory && (
+                <List disablePadding>
+                  {topCats.map((cat) => (
+                    <ListItemButton
+                      key={String(cat.id)}
+                      onClick={() => openCategory(cat)}
+                    >
+                      <ListItemText primary={cat.name} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              )}
+
+              {/* If active category -> show subcategories OR link to product list */}
+              {activeCategory && (
+                <List disablePadding>
                   <ListItemButton
-                    key={String(sub.id)}
                     component={Link}
-                    href={`/category/${sub.id}`}
+                    href={`/category/${activeCategory.id}`}
                     onClick={() => setDrawerOpen(false)}
                   >
-                    <ListItemText primary={sub.name} />
+                    <ListItemText
+                      primary={`View all in ${activeCategory.name}`}
+                    />
                   </ListItemButton>
-                ))
-              ) : (
-                <Box sx={{ p: 2, color: "text.secondary" }}>
-                  No subcategories.
-                </Box>
+
+                  <Divider sx={{ my: 1 }} />
+
+                  {subcats.length > 0 ? (
+                    subcats.map((sub) => (
+                      <ListItemButton
+                        key={String(sub.id)}
+                        component={Link}
+                        href={`/category/${sub.id}`}
+                        onClick={() => setDrawerOpen(false)}
+                      >
+                        <ListItemText primary={sub.name} />
+                      </ListItemButton>
+                    ))
+                  ) : (
+                    <Box sx={{ p: 2, color: "text.secondary" }}>
+                      No subcategories.
+                    </Box>
+                  )}
+                </List>
               )}
-            </List>
-          )}
+
+              {/* Mobile actions placed right after the categories list */}
+              {isMobile && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  <List disablePadding>
+                    {/* Account first */}
+                    <ListItemButton
+                      component={Link}
+                      href="/account"
+                      onClick={() => setDrawerOpen(false)}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
+                        <AccountCircleIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Account" />
+                    </ListItemButton>
+
+                    {/* Cart second */}
+                    <ListItemButton
+                      component={Link}
+                      href="/cart"
+                      onClick={() => setDrawerOpen(false)}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
+                        <Badge badgeContent={count} color="error">
+                          <ShoppingCartIcon />
+                        </Badge>
+                      </ListItemIcon>
+                      <ListItemText primary="Cart" />
+                    </ListItemButton>
+                  </List>
+                </>
+              )}
+            </Box>
+          </Box>
+        </Drawer>
+
+        {/* Top drawer: mobile search */}
+        <Drawer
+          anchor="top"
+          open={searchOpen}
+          onClose={() => setSearchOpen(false)}
+          slotProps={{
+            paper: {
+              sx: { borderRadius: "0 0 12px 12px", overflow: "hidden" },
+            },
+          }}
+          aria-label="Search"
+        >
+          <Box
+            component="form"
+            role="search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const q = searchValue.trim();
+              setSearchOpen(false);
+              if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
+              else router.push("/search");
+            }}
+            sx={{
+              p: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              bgcolor: "background.paper",
+            }}
+          >
+            <SearchIcon />
+            <InputBase
+              autoFocus
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+              sx={{ flex: 1 }}
+            />
+            <IconButton
+              aria-label="close search"
+              onClick={() => setSearchOpen(false)}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
         </Drawer>
       </AppBar>
     </Box>

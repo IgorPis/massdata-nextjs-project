@@ -111,7 +111,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   if (firstCatId) {
     const { data: prodData } = await apollo.query({
       query: ProductsByCategoryDocument,
-      variables: { categoryId: String(firstCatId), limit: 12 },
+      variables: { categoryId: String(firstCatId), limit: 7 },
     });
 
     const rawItems = (prodData?.products?.items ?? []) as NonNullable<

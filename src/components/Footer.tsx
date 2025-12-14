@@ -57,7 +57,7 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
-        mt: "auto",
+        mt: 6,
         bgcolor: "#0b0b0b",
         color: "white",
         borderTop: "1px solid rgba(255,255,255,0.08)",

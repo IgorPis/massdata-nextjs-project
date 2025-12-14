@@ -66,7 +66,7 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   return (
     <Box component="header">
-      <AppBar position="sticky" elevation={1}>
+      <AppBar position="sticky" elevation={1} sx={{ borderRadius: 0 }}>
         {/* Top row */}
         <Toolbar sx={{ gap: 2 }}>
           {isMobile && (
@@ -83,50 +83,69 @@ export default function Header({ categories }: { categories: Category[] }) {
           )}
 
           <Typography
-            variant="h6"
             component={Link}
             href="/"
             sx={{
               whiteSpace: "nowrap",
               textDecoration: "none",
               color: "inherit",
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
+              fontSize: { xs: 20, sm: 22, md: 24 }, // bigger
+              lineHeight: 1,
             }}
           >
-            Massdata
+            Massdata Commerce®
           </Typography>
 
-          <Box
-            component="form"
-            role="search"
-            onSubmit={(e) => e.preventDefault()}
-            sx={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              bgcolor: "rgba(0,0,0,0.04)",
-              border: "1px solid rgba(0,0,0,0.08)",
-              borderRadius: 999,
-              px: 1.25,
-              py: 0.25,
-            }}
-          >
-            <SearchIcon />
-            <InputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              sx={{ color: "inherit", ml: 1, width: "100%" }}
-            />
+          {/* Push everything else to the right */}
+          <Box sx={{ flex: 1 }} />
+
+          {/* Right-side group (search + icons) */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box
+              component="form"
+              role="search"
+              onSubmit={(e) => e.preventDefault()}
+              sx={{
+                width: { xs: 170, sm: 240, md: 320 }, // shorter
+                display: "flex",
+                alignItems: "center",
+                bgcolor: "rgba(255,255,255,0.14)", // lighter on dark header
+                border: "1px solid rgba(255,255,255,0.18)",
+                borderRadius: 999,
+                px: 1.25,
+                py: 0.25,
+                transition: "all .15s ease",
+                "&:focus-within": {
+                  bgcolor: "rgba(255,255,255,0.20)",
+                  borderColor: "rgba(255,255,255,0.35)",
+                },
+              }}
+            >
+              <SearchIcon sx={{ opacity: 0.9 }} />
+              <InputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                sx={{
+                  color: "inherit",
+                  ml: 1,
+                  width: "100%",
+                  "& input::placeholder": { opacity: 0.7 },
+                }}
+              />
+            </Box>
+
+            <IconButton aria-label="cart" color="inherit">
+              <Badge badgeContent={count} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+
+            <IconButton aria-label="profile" color="inherit">
+              <AccountCircleIcon />
+            </IconButton>
           </Box>
-
-          <IconButton aria-label="cart" color="inherit">
-            <Badge badgeContent={count} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>
-
-          <IconButton aria-label="profile" color="inherit">
-            <AccountCircleIcon />
-          </IconButton>
         </Toolbar>
 
         {/* Bottom row (desktop categories) */}
@@ -138,20 +157,24 @@ export default function Header({ categories }: { categories: Category[] }) {
           >
             {topCats.map((cat) => (
               <Box key={String(cat.id)} sx={{ whiteSpace: "nowrap" }}>
-                <button
+                <Box
+                  component="button"
                   onClick={() => openCategory(cat)}
-                  style={{
-                    background: "transparent",
-                    border: 0,
-                    color: "inherit",
-                    font: "inherit",
-                    cursor: "pointer",
-                    padding: "6px 8px",
-                  }}
                   aria-label={`Open category ${cat.name ?? ""}`}
+                  sx={{
+                    all: "unset",
+                    cursor: "pointer",
+                    px: 1.25,
+                    py: 1,
+                    fontSize: { xs: 16, md: 18 }, // 👈 bigger
+                    fontWeight: 600,
+                    color: "inherit",
+                    lineHeight: 1,
+                    "&:hover": { opacity: 0.85 },
+                  }}
                 >
                   {cat.name}
-                </button>
+                </Box>
               </Box>
             ))}
           </Toolbar>
@@ -161,7 +184,15 @@ export default function Header({ categories }: { categories: Category[] }) {
           anchor="left"
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
-          slotProps={{ paper: { sx: { width: 320 } } }}
+          slotProps={{
+            paper: {
+              sx: {
+                width: 320,
+                borderRadius: "0 12px 12px 0",
+                overflow: "hidden",
+              },
+            },
+          }}
           aria-label="Category menu"
         >
           <Box sx={{ p: 2 }}>

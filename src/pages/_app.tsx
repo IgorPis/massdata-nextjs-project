@@ -4,7 +4,8 @@ import "swiper/css/pagination";
 import type { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client";
 import { CssBaseline } from "@mui/material";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
+import { theme } from "@/theme";
 import { createApolloClient } from "@/lib/apolloClient";
 import Layout from "@/components/layout/Layout";
 import type { Category } from "@/types/graphql";
@@ -12,8 +13,8 @@ import type { Category } from "@/types/graphql";
 type PagePropsWithCategories = AppProps["pageProps"] & {
   categories?: Category[];
 };
+
 const client = createApolloClient();
-const theme = createTheme();
 
 export default function App({ Component, pageProps }: AppProps) {
   const { categories = [] } = pageProps as PagePropsWithCategories;

@@ -22,18 +22,25 @@ import { useReactiveVar } from "@apollo/client";
 import { cartVar } from "@/lib/cart";
 import type { Category } from "@/types/graphql";
 
-const HIDDEN_CATEGORY_URL_KEYS = new Set(["test-category"]);
-const HIDDEN_CATEGORY_NAMES = new Set(["Test Category"]);
+const HIDDEN_CATEGORY_URL_KEYS = new Set(["test-category", "example"]);
+const HIDDEN_CATEGORY_NAMES = new Set(["Test Category", "Examples"]);
+
+const HIDDEN_URLKEY_PREFIXES = ["home-"];
+const HIDDEN_NAME_PREFIXES = ["homepage "];
 
 const isVisibleCategory = (c: Category | null | undefined): c is Category => {
   if (!c?.id || !c?.name) return false;
 
-  const urlKey = c.url_key ?? "";
-  const name = c.name ?? "";
+  const urlKey = (c.url_key ?? "").toLowerCase();
+  const name = (c.name ?? "").toLowerCase();
 
-  return (
-    !HIDDEN_CATEGORY_URL_KEYS.has(urlKey) && !HIDDEN_CATEGORY_NAMES.has(name)
-  );
+  if (HIDDEN_CATEGORY_URL_KEYS.has(urlKey)) return false;
+  if (HIDDEN_CATEGORY_NAMES.has(c.name ?? "")) return false;
+
+  if (HIDDEN_URLKEY_PREFIXES.some((p) => urlKey.startsWith(p))) return false;
+  if (HIDDEN_NAME_PREFIXES.some((p) => name.startsWith(p))) return false;
+
+  return true;
 };
 
 export default function Header({ categories }: { categories: Category[] }) {
@@ -96,9 +103,11 @@ export default function Header({ categories }: { categories: Category[] }) {
               flex: 1,
               display: "flex",
               alignItems: "center",
-              bgcolor: "rgba(255,255,255,0.15)",
-              borderRadius: 2,
-              px: 1,
+              bgcolor: "rgba(0,0,0,0.04)",
+              border: "1px solid rgba(0,0,0,0.08)",
+              borderRadius: 999,
+              px: 1.25,
+              py: 0.25,
             }}
           >
             <SearchIcon />

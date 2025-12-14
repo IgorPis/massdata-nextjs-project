@@ -1,15 +1,10 @@
 import Head from "next/head";
-import Link from "next/link";
-import Image from "next/image";
-import { Box, Button, Container, Typography } from "@mui/material";
 import type { GetServerSideProps } from "next";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-
 import { createApolloClient } from "@/lib/apolloClient";
 import ProductCard from "@/components/ProductCard";
+import Hero from "@/components/home/Hero";
+import FeaturedCarousel from "@/components/home/FeaturedCarousel";
 import type { Category, ProductListItem } from "@/types/graphql";
-
 import {
   CategoriesDocument,
   ProductsByCategoryDocument,
@@ -57,181 +52,41 @@ export default function Home({
         />
       </Head>
 
-      {/* HERO */}
-      <Box
-        sx={{
-          position: "relative",
-          width: "100%",
-          minHeight: { xs: 360, md: 520 },
-          overflow: "hidden",
-          borderRadius: 0, // <- no rounded corners
-          mb: { xs: 4, md: 6 },
+      <Hero
+        imageSrc="/hero.webp"
+        overline="A STEP INTO STYLE"
+        title={
+          <>
+            DISCOVER COMFORT
+            <br />
+            BEYOND ORDINARY.
+          </>
+        }
+        description={
+          <>
+            Explore curated sock collections and standout designs. There’s a
+            pair for everyone.
+          </>
+        }
+        primaryAction={{
+          label: "Shop now",
+          href: primaryCatId ? `/category/${primaryCatId}` : "/",
+          variant: "contained",
         }}
-      >
-        {/* Background image */}
-        <Image
-          src="/hero.webp"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          style={{ objectFit: "cover" }}
-        />
-
-        {/* Dark overlay for readability */}
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            bgcolor: "rgba(0,0,0,0.35)",
-          }}
-        />
-
-        {/* Gradient (stronger on the left where text is) */}
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.10) 100%)",
-          }}
-        />
-
-        <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
-          {/* Optional panel behind text (kept square) */}
-          <Box
-            sx={{
-              maxWidth: { xs: "100%", md: "fit-content" },
-              p: { xs: 2.5, md: 3.5 },
-              bgcolor: "rgba(0,0,0,0.22)",
-              border: "1px solid rgba(255,255,255,0.10)",
-              borderRadius: 0, // <- keep it square
-              backdropFilter: "blur(2px)",
-            }}
-          >
-            <Typography
-              variant="overline"
-              sx={{
-                letterSpacing: 2,
-                opacity: 0.95,
-                color: "common.white",
-                textShadow: "0 2px 12px rgba(0,0,0,0.7)",
-              }}
-            >
-              A STEP INTO STYLE
-            </Typography>
-
-            <Typography
-              component="h1"
-              sx={{
-                mt: 1,
-                fontWeight: 900,
-                lineHeight: 0.95,
-                fontSize: { xs: 44, sm: 56, md: 72 },
-                letterSpacing: "-0.02em",
-                color: "common.white",
-                textShadow: "0 4px 18px rgba(0,0,0,0.75)",
-              }}
-            >
-              DISCOVER COMFORT
-              <br />
-              BEYOND ORDINARY.
-            </Typography>
-
-            <Typography
-              sx={{
-                mt: 2,
-                maxWidth: 560,
-                color: "rgba(255,255,255,0.92)",
-                fontSize: { xs: 14, sm: 16 },
-                textShadow: "0 2px 12px rgba(0,0,0,0.75)",
-              }}
-            >
-              Explore curated sock collections and standout designs. There’s a
-              pair for everyone.
-            </Typography>
-
-            <Box sx={{ mt: 3, display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-              <Button
-                variant="contained"
-                color="inherit"
-                component={Link}
-                href={primaryCatId ? `/category/${primaryCatId}` : "/"}
-              >
-                Shop now
-              </Button>
-
-              <Button
-                variant="outlined"
-                color="inherit"
-                component={Link}
-                href={topCats[1]?.id ? `/category/${topCats[1].id}` : "/"}
-                sx={{ borderColor: "rgba(255,255,255,0.7)" }}
-              >
-                Browse categories
-              </Button>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
-
-      {/* FEATURED (carousel)*/}
-      <Box
-        sx={{
-          bgcolor: "grey.900",
-          color: "common.white",
-          py: { xs: 5, md: 7 },
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-          "& .swiper-button-next, & .swiper-button-prev": {
-            color: "white",
-          },
-          "& .swiper-button-next:after, & .swiper-button-prev:after": {
-            fontSize: 18,
-            fontWeight: 700,
-          },
+        secondaryAction={{
+          label: "Browse categories",
+          href: topCats[1]?.id ? `/category/${topCats[1].id}` : "/",
+          variant: "outlined",
         }}
-      >
-        <Container>
-          <Typography
-            variant="overline"
-            sx={{ letterSpacing: 2, opacity: 0.8 }}
-          >
-            FEATURED
-          </Typography>
+      />
 
-          <Typography
-            variant="h5"
-            component="h2"
-            sx={{ mt: 0.5, mb: 2, fontWeight: 800 }}
-          >
-            Trending products
-          </Typography>
-
-          {featuredProducts.length > 0 ? (
-            <Swiper
-              modules={[Navigation]}
-              navigation
-              spaceBetween={16}
-              slidesPerView={1.15}
-              breakpoints={{
-                600: { slidesPerView: 2.2 },
-                900: { slidesPerView: 4.2 },
-              }}
-            >
-              {featuredProducts.map((p) => (
-                <SwiperSlide key={p.sku ?? String(p.id)}>
-                  <ProductCard product={p} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : (
-            <Typography sx={{ opacity: 0.8 }}>
-              No featured products available.
-            </Typography>
-          )}
-        </Container>
-      </Box>
+      <FeaturedCarousel<ProductListItem>
+        title="Trending products"
+        items={featuredProducts}
+        getKey={(p) => p.sku ?? String(p.id)}
+        renderSlide={(p) => <ProductCard product={p} />}
+        emptyText="No featured products available."
+      />
     </>
   );
 }

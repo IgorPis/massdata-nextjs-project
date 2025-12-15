@@ -10,21 +10,7 @@ import {
   ProductsByCategoryDocument,
 } from "../../graphql/generated";
 import type { ProductsByCategoryQuery } from "../../graphql/generated";
-
-const isVisibleTopCategory = (
-  c: Category | null | undefined
-): c is Category => {
-  if (!c?.id || !c?.name) return false;
-  const urlKey = (c.url_key ?? "").toLowerCase();
-  const name = (c.name ?? "").toLowerCase();
-  if (urlKey === "test-category") return false;
-  if (name === "test category") return false;
-  if (urlKey.startsWith("home-")) return false;
-  if (name.startsWith("homepage ")) return false;
-  if (urlKey === "example") return false;
-  if (name === "examples") return false;
-  return true;
-};
+import { isVisibleCategory } from "@/components/layout/Header/categoryUtils";
 
 export default function Home({
   categories,
@@ -33,11 +19,11 @@ export default function Home({
   categories: Category[];
   featuredProducts: ProductListItem[];
 }) {
-  const topCats = (categories ?? []).filter(isVisibleTopCategory);
+  const topCats = (categories ?? []).filter(isVisibleCategory);
 
   const primaryCatId =
-    topCats.find((c) => (c.url_key ?? "") === "men")?.id ??
-    topCats.find((c) => (c.url_key ?? "") === "women")?.id ??
+    topCats.find((c) => (c.url_key ?? "").toLowerCase() === "men")?.id ??
+    topCats.find((c) => (c.url_key ?? "").toLowerCase() === "women")?.id ??
     topCats[0]?.id ??
     null;
 
@@ -103,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const root = data?.categories?.items?.[0] ?? null;
   const categories = (root?.children ?? []).filter(Boolean) as Category[];
 
-  const topCats = categories.filter(isVisibleTopCategory);
+  const topCats = categories.filter(isVisibleCategory);
   const firstCatId = topCats[0]?.id;
 
   let featuredProducts: ProductListItem[] = [];

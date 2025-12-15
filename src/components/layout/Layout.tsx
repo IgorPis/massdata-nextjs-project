@@ -18,7 +18,7 @@ export default function Layout({ categories = [], children }: LayoutProps) {
         <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico?v=3" />
 
-        <title>Massdata</title>
+        <title key="title">Massdata Commerce®</title>
         <meta
           name="description"
           content="Demo commerce frontend built with Next.js, GraphQL and MUI"

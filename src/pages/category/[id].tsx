@@ -13,6 +13,8 @@ import type { Category, ProductListItem } from "@/types/graphql";
 
 type CategoryNode = Category & {
   description?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
   children?: Array<CategoryNode | null> | null;
 };
 
@@ -30,19 +32,22 @@ function findContextById(cats: CategoryNode[], id: string) {
     const siblings =
       ((top.children ?? []).filter(Boolean) as CategoryNode[]) ?? [];
 
+    // If user opened /category/<MenId> (top-level)
     if (String(top.id) === id) {
-      return { current: top, siblings };
+      return { current: top, siblings, parentName: top.name ?? null };
     }
 
+    // If user opened /category/<BusinessId> (child)
     const hit = siblings.find((c) => String(c?.id) === id);
     if (hit) {
-      return { current: hit, siblings };
+      return { current: hit, siblings, parentName: top.name ?? null };
     }
   }
 
   return {
     current: null as CategoryNode | null,
     siblings: [] as CategoryNode[],
+    parentName: null as string | null,
   };
 }
 
@@ -55,20 +60,42 @@ export default function CategoryPage({
   products: ProductListItem[];
   categoryId: string;
 }) {
-  const { current, siblings } = findContextById(categories, categoryId);
+  const { current, siblings, parentName } = findContextById(
+    categories,
+    categoryId
+  );
+
+  // For testing
+  // if (process.env.NODE_ENV === "development") {
+  //   console.log("[Category SEO]", {
+  //     id: categoryId,
+  //     name: current?.name,
+  //     parentName,
+  //     meta_title: current?.meta_title,
+  //     meta_description: current?.meta_description,
+  //     description: current?.description,
+  //   });
+  // }
 
   const categoryName = current?.name ?? `Category ${categoryId}`;
   const description = stripHtml(current?.description);
 
+  const metaTitle = (current?.meta_title ?? "").trim();
+  const metaDesc = stripHtml(current?.meta_description).trim();
+
+  const fallbackTitle = `Shop cool ${categoryName} Socks for ${(
+    parentName ?? categoryName
+  ).toLowerCase()}`;
+
+  const title = `${metaTitle || fallbackTitle} - Massdata Commerce®`;
+  const headDescription =
+    metaDesc || description || `Browse products in ${categoryName}.`;
+
   return (
     <>
       <Head>
-        <title>{`${categoryName} - Massdata`}</title>
-        <meta
-          name="description"
-          content={description || `Browse products in ${categoryName}.`}
-          key="description"
-        />
+        <title key="title">{title}</title>
+        <meta name="description" content={headDescription} key="description" />
       </Head>
 
       <Container maxWidth="xl" sx={{ pt: { xs: 5, md: 7 }, pb: 4 }}>

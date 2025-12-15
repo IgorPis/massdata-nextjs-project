@@ -9334,12 +9334,12 @@ export type ProductBySkuQueryVariables = Exact<{
 
 
 export type ProductBySkuQuery = { __typename?: 'Query', products?: { __typename?: 'Products', items?: Array<
-      | { __typename?: 'BundleProduct', id?: number | null, sku?: string | null, name?: string | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'ConfigurableProduct', id?: number | null, sku?: string | null, name?: string | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'DownloadableProduct', id?: number | null, sku?: string | null, name?: string | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'GroupedProduct', id?: number | null, sku?: string | null, name?: string | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'SimpleProduct', id?: number | null, sku?: string | null, name?: string | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'VirtualProduct', id?: number | null, sku?: string | null, name?: string | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename: 'BundleProduct', id?: number | null, sku?: string | null, name?: string | null, rating_summary: number, review_count: number, short_description?: { __typename?: 'ComplexTextValue', html: string } | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, categories?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null } | null> | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null }, final_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename: 'ConfigurableProduct', id?: number | null, sku?: string | null, name?: string | null, rating_summary: number, review_count: number, configurable_options?: Array<{ __typename?: 'ConfigurableProductOptions', uid: string, label?: string | null, values?: Array<{ __typename?: 'ConfigurableProductOptionsValues', uid?: string | null, label?: string | null } | null> | null } | null> | null, short_description?: { __typename?: 'ComplexTextValue', html: string } | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, categories?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null } | null> | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null }, final_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename: 'DownloadableProduct', id?: number | null, sku?: string | null, name?: string | null, rating_summary: number, review_count: number, short_description?: { __typename?: 'ComplexTextValue', html: string } | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, categories?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null } | null> | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null }, final_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename: 'GroupedProduct', id?: number | null, sku?: string | null, name?: string | null, rating_summary: number, review_count: number, short_description?: { __typename?: 'ComplexTextValue', html: string } | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, categories?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null } | null> | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null }, final_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename: 'SimpleProduct', id?: number | null, sku?: string | null, name?: string | null, rating_summary: number, review_count: number, short_description?: { __typename?: 'ComplexTextValue', html: string } | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, categories?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null } | null> | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null }, final_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename: 'VirtualProduct', id?: number | null, sku?: string | null, name?: string | null, rating_summary: number, review_count: number, short_description?: { __typename?: 'ComplexTextValue', html: string } | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, categories?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null } | null> | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null }, final_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
      | null> | null } | null };
 
 export type ProductsByCategoryQueryVariables = Exact<{
@@ -9418,12 +9418,22 @@ export const ProductBySkuDocument = gql`
     query ProductBySku($sku: String!) {
   products(filter: {sku: {eq: $sku}}, pageSize: 1) {
     items {
+      __typename
       id
       sku
       name
+      short_description {
+        html
+      }
       description {
         html
       }
+      categories {
+        id
+        name
+      }
+      rating_summary
+      review_count
       media_gallery_entries {
         id
         file
@@ -9434,6 +9444,20 @@ export const ProductBySkuDocument = gql`
           regular_price {
             value
             currency
+          }
+          final_price {
+            value
+            currency
+          }
+        }
+      }
+      ... on ConfigurableProduct {
+        configurable_options {
+          uid
+          label
+          values {
+            uid
+            label
           }
         }
       }

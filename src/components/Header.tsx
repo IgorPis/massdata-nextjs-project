@@ -128,9 +128,6 @@ export default function Header({ categories }: { categories: Category[] }) {
                 role="search"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  const q = searchValue.trim();
-                  if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
-                  else router.push("/search");
                 }}
                 sx={{
                   width: { xs: 170, sm: 240, md: 320 },
@@ -381,10 +378,7 @@ export default function Header({ categories }: { categories: Category[] }) {
             role="search"
             onSubmit={(e) => {
               e.preventDefault();
-              const q = searchValue.trim();
               setSearchOpen(false);
-              if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
-              else router.push("/search");
             }}
             sx={{
               p: 2,

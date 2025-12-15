@@ -1,6 +1,7 @@
 import Head from "next/head";
+import Link from "next/link";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import ProductCard from "@/components/ProductCard";
 import { createApolloClient } from "@/lib/apolloClient";
@@ -8,52 +9,165 @@ import {
   CategoriesDocument,
   ProductsByCategoryDocument,
 } from "../../../graphql/generated";
-import type { Category } from "@/types/graphql";
-import type { ProductListItem } from "@/types/graphql";
+import type { Category, ProductListItem } from "@/types/graphql";
 
-const findCategoryNameById = (cats: Category[], id: string): string | null => {
-  for (const c of cats) {
-    if (String(c.id) === id) return c.name ?? null;
-
-    const kids = (c.children ?? []).filter((x): x is NonNullable<typeof x> =>
-      Boolean(x)
-    );
-
-    const hit = findCategoryNameById(kids, id);
-    if (hit) return hit;
-  }
-  return null;
+type CategoryNode = Category & {
+  description?: string | null;
+  children?: Array<CategoryNode | null> | null;
 };
+
+const stripHtml = (s?: string | null) =>
+  (s ?? "")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+function findContextById(cats: CategoryNode[], id: string) {
+  for (const top of cats) {
+    if (!top?.id) continue;
+
+    const siblings =
+      ((top.children ?? []).filter(Boolean) as CategoryNode[]) ?? [];
+
+    if (String(top.id) === id) {
+      return { current: top, siblings };
+    }
+
+    const hit = siblings.find((c) => String(c?.id) === id);
+    if (hit) {
+      return { current: hit, siblings };
+    }
+  }
+
+  return {
+    current: null as CategoryNode | null,
+    siblings: [] as CategoryNode[],
+  };
+}
 
 export default function CategoryPage({
   categories,
   products,
   categoryId,
 }: {
-  categories: Category[];
+  categories: CategoryNode[];
   products: ProductListItem[];
   categoryId: string;
 }) {
-  const categoryName =
-    findCategoryNameById(categories, categoryId) ?? `Category ${categoryId}`;
+  const { current, siblings } = findContextById(categories, categoryId);
+
+  const categoryName = current?.name ?? `Category ${categoryId}`;
+  const description = stripHtml(current?.description);
 
   return (
     <>
       <Head>
-        <title>{`${categoryName} — Massdata`}</title>
+        <title>{`${categoryName} - Massdata`}</title>
         <meta
           name="description"
-          content={`Browse products in ${categoryName}.`}
+          content={description || `Browse products in ${categoryName}.`}
           key="description"
         />
       </Head>
 
-      <Container sx={{ py: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {categoryName}
-        </Typography>
+      <Container maxWidth="xl" sx={{ pt: { xs: 5, md: 7 }, pb: 4 }}>
+        <Box sx={{ textAlign: "center", px: 1 }}>
+          <Typography
+            component="h1"
+            sx={{
+              fontWeight: 900,
+              letterSpacing: "-0.04em",
+              fontSize: { xs: 40, sm: 56, md: 72 },
+              lineHeight: 1.05,
+            }}
+          >
+            {categoryName}
+          </Typography>
 
-        <Grid container spacing={2}>
+          {description ? (
+            <Typography
+              sx={{
+                mt: 2,
+                mx: "auto",
+                maxWidth: 860,
+                opacity: 0.85,
+                fontSize: { xs: 15, sm: 16, md: 17 },
+                lineHeight: 1.8,
+              }}
+            >
+              {description}
+            </Typography>
+          ) : null}
+
+          {siblings.length > 0 ? (
+            <Stack
+              direction="row"
+              justifyContent="center"
+              sx={{
+                mt: 3,
+                flexWrap: "wrap",
+                rowGap: 1.25,
+                columnGap: { xs: 2, sm: 3 },
+              }}
+            >
+              {siblings.map((c) => {
+                const active = String(c.id) === categoryId;
+                return (
+                  <Box
+                    key={String(c.id)}
+                    component={Link}
+                    href={`/category/${c.id}`}
+                    sx={{
+                      textDecoration: active ? "underline" : "none",
+                      textUnderlineOffset: "6px",
+                      color: active ? "common.white" : "rgba(255,255,255,0.85)",
+                      fontWeight: 700,
+                      fontSize: { xs: 14, sm: 16 },
+                      "&:hover": {
+                        color: "common.white",
+                        textDecoration: "underline",
+                        textUnderlineOffset: "6px",
+                      },
+                    }}
+                  >
+                    {c.name}
+                  </Box>
+                );
+              })}
+            </Stack>
+          ) : null}
+        </Box>
+
+        <Box
+          sx={{
+            mt: 5,
+            mb: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 2,
+            opacity: 0.6,
+          }}
+        >
+          <Box
+            sx={{
+              height: 1,
+              bgcolor: "rgba(255,255,255,0.14)",
+              width: { xs: 80, sm: 200, md: 260 },
+            }}
+          />
+          <Typography variant="body2">{products.length} products</Typography>
+          <Box
+            sx={{
+              height: 1,
+              bgcolor: "rgba(255,255,255,0.14)",
+              width: { xs: 80, sm: 200, md: 260 },
+            }}
+          />
+        </Box>
+
+        <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
           {products.map((p) => (
             <Grid key={p.sku ?? String(p.id)} size={{ xs: 6, sm: 4, md: 3 }}>
               <ProductCard product={p} />
@@ -70,11 +184,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await apollo.query({ query: CategoriesDocument });
 
   const root = data?.categories?.items?.[0] ?? null;
-  const items = (root?.children ?? []).filter(Boolean) as Category[];
+  const top = ((root?.children ?? []).filter(Boolean) as CategoryNode[]) ?? [];
 
-  const paths = items
-    .filter((c): c is Category => Boolean(c?.id))
-    .slice(0, 8)
+  const childCats = top.flatMap(
+    (t) => ((t.children ?? []).filter(Boolean) as CategoryNode[]) ?? []
+  );
+
+  const paths = childCats
+    .filter((c) => Boolean(c?.id))
+    .slice(0, 24)
     .map((c) => ({ params: { id: String(c.id) } }));
 
   return { paths, fallback: "blocking" };
@@ -86,7 +204,8 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
   const catRes = await apollo.query({ query: CategoriesDocument });
   const root = catRes.data?.categories?.items?.[0] ?? null;
-  const categories = (root?.children ?? []).filter(Boolean);
+  const categories =
+    ((root?.children ?? []).filter(Boolean) as CategoryNode[]) ?? [];
 
   const prodRes = await apollo.query({
     query: ProductsByCategoryDocument,

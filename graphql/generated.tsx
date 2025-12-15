@@ -9326,7 +9326,7 @@ export type CreateEmptyCartInput = {
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CategoriesQuery = { __typename?: 'Query', categories?: { __typename?: 'CategoryResult', items?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null, url_key?: string | null, children?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null, url_key?: string | null, children?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null, url_key?: string | null } | null> | null } | null> | null } | null> | null } | null };
+export type CategoriesQuery = { __typename?: 'Query', categories?: { __typename?: 'CategoryResult', items?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null, url_key?: string | null, children?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null, url_key?: string | null, children?: Array<{ __typename?: 'CategoryTree', id?: number | null, name?: string | null, url_key?: string | null, meta_title?: string | null, meta_description?: string | null, description?: string | null } | null> | null } | null> | null } | null> | null } | null };
 
 export type ProductBySkuQueryVariables = Exact<{
   sku: Scalars['String']['input'];
@@ -9342,20 +9342,6 @@ export type ProductBySkuQuery = { __typename?: 'Query', products?: { __typename?
       | { __typename?: 'VirtualProduct', id?: number | null, sku?: string | null, name?: string | null, description?: { __typename?: 'ComplexTextValue', html: string } | null, media_gallery_entries?: Array<{ __typename?: 'MediaGalleryEntry', id?: number | null, file?: string | null, label?: string | null } | null> | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
      | null> | null } | null };
 
-export type ProductSkusForPathsQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-
-export type ProductSkusForPathsQuery = { __typename?: 'Query', products?: { __typename?: 'Products', items?: Array<
-      | { __typename?: 'BundleProduct', sku?: string | null }
-      | { __typename?: 'ConfigurableProduct', sku?: string | null }
-      | { __typename?: 'DownloadableProduct', sku?: string | null }
-      | { __typename?: 'GroupedProduct', sku?: string | null }
-      | { __typename?: 'SimpleProduct', sku?: string | null }
-      | { __typename?: 'VirtualProduct', sku?: string | null }
-     | null> | null } | null };
-
 export type ProductsByCategoryQueryVariables = Exact<{
   categoryId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -9363,12 +9349,12 @@ export type ProductsByCategoryQueryVariables = Exact<{
 
 
 export type ProductsByCategoryQuery = { __typename?: 'Query', products?: { __typename?: 'Products', items?: Array<
-      | { __typename?: 'BundleProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'ConfigurableProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'DownloadableProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'GroupedProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'SimpleProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
-      | { __typename?: 'VirtualProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename?: 'BundleProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, rating_summary: number, review_count: number, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename?: 'ConfigurableProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, rating_summary: number, review_count: number, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename?: 'DownloadableProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, rating_summary: number, review_count: number, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename?: 'GroupedProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, rating_summary: number, review_count: number, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename?: 'SimpleProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, rating_summary: number, review_count: number, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
+      | { __typename?: 'VirtualProduct', id?: number | null, sku?: string | null, name?: string | null, url_key?: string | null, rating_summary: number, review_count: number, small_image?: { __typename?: 'ProductImage', url?: string | null, label?: string | null } | null, price_range: { __typename?: 'PriceRange', minimum_price: { __typename?: 'ProductPrice', regular_price: { __typename?: 'Money', value?: number | null, currency?: CurrencyEnum | null } } } }
      | null> | null } | null };
 
 
@@ -9387,6 +9373,9 @@ export const CategoriesDocument = gql`
           id
           name
           url_key
+          meta_title
+          meta_description
+          description
         }
       }
     }
@@ -9485,48 +9474,6 @@ export type ProductBySkuQueryHookResult = ReturnType<typeof useProductBySkuQuery
 export type ProductBySkuLazyQueryHookResult = ReturnType<typeof useProductBySkuLazyQuery>;
 export type ProductBySkuSuspenseQueryHookResult = ReturnType<typeof useProductBySkuSuspenseQuery>;
 export type ProductBySkuQueryResult = Apollo.QueryResult<ProductBySkuQuery, ProductBySkuQueryVariables>;
-export const ProductSkusForPathsDocument = gql`
-    query ProductSkusForPaths($limit: Int = 50) {
-  products(pageSize: $limit) {
-    items {
-      sku
-    }
-  }
-}
-    `;
-
-/**
- * __useProductSkusForPathsQuery__
- *
- * To run a query within a React component, call `useProductSkusForPathsQuery` and pass it any options that fit your needs.
- * When your component renders, `useProductSkusForPathsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useProductSkusForPathsQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useProductSkusForPathsQuery(baseOptions?: Apollo.QueryHookOptions<ProductSkusForPathsQuery, ProductSkusForPathsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProductSkusForPathsQuery, ProductSkusForPathsQueryVariables>(ProductSkusForPathsDocument, options);
-      }
-export function useProductSkusForPathsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductSkusForPathsQuery, ProductSkusForPathsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProductSkusForPathsQuery, ProductSkusForPathsQueryVariables>(ProductSkusForPathsDocument, options);
-        }
-export function useProductSkusForPathsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProductSkusForPathsQuery, ProductSkusForPathsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ProductSkusForPathsQuery, ProductSkusForPathsQueryVariables>(ProductSkusForPathsDocument, options);
-        }
-export type ProductSkusForPathsQueryHookResult = ReturnType<typeof useProductSkusForPathsQuery>;
-export type ProductSkusForPathsLazyQueryHookResult = ReturnType<typeof useProductSkusForPathsLazyQuery>;
-export type ProductSkusForPathsSuspenseQueryHookResult = ReturnType<typeof useProductSkusForPathsSuspenseQuery>;
-export type ProductSkusForPathsQueryResult = Apollo.QueryResult<ProductSkusForPathsQuery, ProductSkusForPathsQueryVariables>;
 export const ProductsByCategoryDocument = gql`
     query ProductsByCategory($categoryId: String!, $limit: Int = 24) {
   products(filter: {category_id: {eq: $categoryId}}, pageSize: $limit) {
@@ -9535,6 +9482,8 @@ export const ProductsByCategoryDocument = gql`
       sku
       name
       url_key
+      rating_summary
+      review_count
       small_image {
         url
         label

@@ -12,6 +12,9 @@ query Categories {
           id
           name
           url_key
+          meta_title
+          meta_description
+          description
         }
       }
     }

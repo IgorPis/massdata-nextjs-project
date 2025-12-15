@@ -5,6 +5,8 @@ query ProductsByCategory($categoryId: String!, $limit: Int = 24) {
       sku
       name
       url_key
+      rating_summary
+      review_count
       small_image {
         url
         label

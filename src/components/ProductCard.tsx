@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Rating } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import type { ProductListItem } from "@/types/graphql";
@@ -19,6 +19,13 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
   const currency =
     product?.price_range?.minimum_price?.regular_price?.currency ?? "USD";
 
+  // Magento: rating_summary is 0..100 (0 means "no rating")
+  const ratingSummary = product?.rating_summary ?? 0;
+  const reviewCount = product?.review_count ?? 0;
+
+  // Always render stars; default to 0 (greyed/empty)
+  const stars = Math.max(0, Math.min(5, ratingSummary / 20));
+
   const href = sku ? `/product/${encodeURIComponent(sku)}` : "#";
 
   return (
@@ -32,13 +39,13 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
         width: "100%",
       }}
     >
-      {/* IMAGE TILE (taller) */}
+      {/* IMAGE TILE */}
       <Box
         sx={{
           position: "relative",
           width: "100%",
-          aspectRatio: "3 / 4", // taller like GraphCommerce
-          borderRadius: 0.5,
+          aspectRatio: "1 / 1", // GraphCommerce style tile
+          borderRadius: 2,
           overflow: "hidden",
           bgcolor: "#fff",
           boxShadow: "0 14px 40px rgba(0,0,0,0.35)",
@@ -55,24 +62,54 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
         ) : null}
       </Box>
 
-      {/* TEXT BELOW (NOT fused into image) */}
-      <Box sx={{ pt: 1.5, textAlign: "center", px: 0.5 }}>
-        <Typography
-          sx={{
-            fontWeight: 800,
-            fontSize: { xs: 16, md: 18 },
-            lineHeight: 1.2,
-          }}
-          noWrap
-        >
-          {name}
-        </Typography>
+      {/* TEXT BELOW */}
+      <Box sx={{ pt: 1.25 }}>
+        {/* Stars always visible (greyed when 0) */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+          <Rating
+            size="small"
+            precision={0.5}
+            value={stars}
+            readOnly
+            sx={{
+              "& .MuiRating-iconFilled": { color: "#f6c444" },
+              "& .MuiRating-iconEmpty": { color: "rgba(255,255,255,0.22)" },
+            }}
+          />
 
-        {price != null && (
-          <Typography sx={{ mt: 0.5, opacity: 0.8, fontSize: 14 }}>
-            {formatPrice(price, currency)}
+          {reviewCount > 0 ? (
+            <Typography sx={{ fontSize: 12, opacity: 0.65 }}>
+              ({reviewCount})
+            </Typography>
+          ) : null}
+        </Box>
+
+        {/* name left, price right */}
+        <Box
+          sx={{
+            mt: 0.75,
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            gap: 1,
+          }}
+        >
+          <Typography
+            sx={{ fontWeight: 800, fontSize: { xs: 14, sm: 15, md: 16 } }}
+            noWrap
+          >
+            {name}
           </Typography>
-        )}
+
+          {price != null ? (
+            <Typography
+              sx={{ fontWeight: 800, fontSize: { xs: 14, sm: 15, md: 16 } }}
+              noWrap
+            >
+              {formatPrice(price, currency)}
+            </Typography>
+          ) : null}
+        </Box>
       </Box>
     </Box>
   );

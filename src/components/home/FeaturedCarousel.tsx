@@ -58,7 +58,6 @@ export default function FeaturedCarousel<T>({
         py: { xs: 5, md: 7 },
       }}
     >
-      {/* Title area stays centered like GraphCommerce */}
       <Container
         maxWidth={false}
         sx={{ px: { xs: 2, md: 6, lg: 10 }, maxWidth: 1440 }}
@@ -77,9 +76,7 @@ export default function FeaturedCarousel<T>({
       </Container>
 
       {items.length > 0 ? (
-        // This wrapper is FULL WIDTH so arrows can sit at screen edges
         <Box sx={{ position: "relative", width: "100%", overflowX: "clip" }}>
-          {/* LEFT arrow */}
           <IconButton
             className={`${prevClass} gcNav`}
             aria-label="Previous"
@@ -103,7 +100,6 @@ export default function FeaturedCarousel<T>({
             <ArrowBackIosNewRoundedIcon fontSize="small" />
           </IconButton>
 
-          {/* RIGHT arrow */}
           <IconButton
             className={`${nextClass} gcNav`}
             aria-label="Next"

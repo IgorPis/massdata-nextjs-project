@@ -7,48 +7,31 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import XIcon from "@mui/icons-material/X";
 import InstagramIcon from "@mui/icons-material/Instagram";
 
-const TopLink = ({
-  href,
-  children,
-}: {
+type FooterLinkProps = {
   href: string;
   children: React.ReactNode;
-}) => (
-  <Box
-    component={Link}
-    href={href}
-    sx={{
-      textDecoration: "none",
-      color: "rgba(255,255,255,0.9)",
-      fontSize: 16,
-      fontWeight: 500,
-      "&:hover": { color: "#fff", textDecoration: "underline" },
-    }}
-  >
-    {children}
-  </Box>
-);
+  variant?: "top" | "bottom";
+};
 
-const BottomLink = ({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) => (
-  <Box
-    component={Link}
-    href={href}
-    sx={{
-      textDecoration: "none",
-      color: "rgba(255,255,255,0.85)",
-      fontSize: 14,
-      "&:hover": { color: "#fff", textDecoration: "underline" },
-    }}
-  >
-    {children}
-  </Box>
-);
+const FooterLink = ({ href, children, variant = "top" }: FooterLinkProps) => {
+  const isTop = variant === "top";
+
+  return (
+    <Box
+      component={Link}
+      href={href}
+      sx={{
+        textDecoration: "none",
+        color: isTop ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.85)",
+        fontSize: isTop ? 16 : 14,
+        fontWeight: isTop ? 500 : 400,
+        "&:hover": { color: "#fff", textDecoration: "underline" },
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -63,32 +46,69 @@ export default function Footer() {
         borderTop: "1px solid rgba(255,255,255,0.08)",
       }}
     >
-      {/* Top link area */}
       <Container sx={{ py: { xs: 4, md: 6 } }}>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: { xs: 2, md: 2.5 },
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1.2fr 2fr" },
+            gap: { xs: 3, md: 6 },
+            alignItems: "start",
           }}
         >
-          {/* Row 1 */}
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, rowGap: 2 }}>
-            <TopLink href="#">Brand/Sizes</TopLink>
-            <TopLink href="#">Newsletter</TopLink>
-            <TopLink href="#">Returns</TopLink>
-            <TopLink href="#">Shipping</TopLink>
-            <TopLink href="#">Customer service</TopLink>
-            <TopLink href="#">About Us</TopLink>
-            <TopLink href="#">Contact</TopLink>
-            <TopLink href="#">Careers</TopLink>
+          <Box>
+            <Typography sx={{ fontWeight: 800, fontSize: 18 }}>
+              Massdata Commerce®
+            </Typography>
+            <Typography
+              sx={{ mt: 1, opacity: 0.85, lineHeight: 1.7, fontSize: 14 }}
+            >
+              326 Broderick St., Los Angeles, CA 93107
+              <br />
+              Support: support@massdata.commerce
+              <br />
+              Phone: 435-221-6573
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: { xs: 2, md: 2.5 },
+            }}
+          >
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, rowGap: 2 }}>
+              <FooterLink href="#" variant="top">
+                Brand/Sizes
+              </FooterLink>
+              <FooterLink href="#" variant="top">
+                Newsletter
+              </FooterLink>
+              <FooterLink href="#" variant="top">
+                Returns
+              </FooterLink>
+              <FooterLink href="#" variant="top">
+                Shipping
+              </FooterLink>
+              <FooterLink href="#" variant="top">
+                Customer service
+              </FooterLink>
+              <FooterLink href="#" variant="top">
+                About Us
+              </FooterLink>
+              <FooterLink href="#" variant="top">
+                Contact
+              </FooterLink>
+              <FooterLink href="#" variant="top">
+                Careers
+              </FooterLink>
+            </Box>
           </Box>
         </Box>
       </Container>
 
       <Divider sx={{ borderColor: "rgba(255,255,255,0.10)" }} />
 
-      {/* Social icons */}
       <Container sx={{ py: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton
@@ -117,7 +137,6 @@ export default function Footer() {
 
       <Divider sx={{ borderColor: "rgba(255,255,255,0.10)" }} />
 
-      {/* Bottom bar */}
       <Container sx={{ py: 2.5 }}>
         <Box
           sx={{
@@ -133,11 +152,21 @@ export default function Footer() {
           </Typography>
 
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2.5, rowGap: 1 }}>
-            <BottomLink href="#">Terms and conditions</BottomLink>
-            <BottomLink href="#">Credits</BottomLink>
-            <BottomLink href="#">Subscribe</BottomLink>
-            <BottomLink href="#">Remove account</BottomLink>
-            <BottomLink href="#">Newsletter</BottomLink>
+            <FooterLink href="#" variant="bottom">
+              Terms and conditions
+            </FooterLink>
+            <FooterLink href="#" variant="bottom">
+              Credits
+            </FooterLink>
+            <FooterLink href="#" variant="bottom">
+              Subscribe
+            </FooterLink>
+            <FooterLink href="#" variant="bottom">
+              Remove account
+            </FooterLink>
+            <FooterLink href="#" variant="bottom">
+              Newsletter
+            </FooterLink>
           </Box>
         </Box>
       </Container>

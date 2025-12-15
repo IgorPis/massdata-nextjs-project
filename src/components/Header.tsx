@@ -111,13 +111,10 @@ export default function Header({ categories }: { categories: Category[] }) {
             Massdata Commerce®
           </Typography>
 
-          {/* Push everything else to the right */}
           <Box sx={{ flex: 1 }} />
 
-          {/* Right-side group (search + icons) */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {isMobile ? (
-              // Mobile: search icon only
               <IconButton
                 aria-label="open search"
                 color="inherit"
@@ -126,7 +123,6 @@ export default function Header({ categories }: { categories: Category[] }) {
                 <SearchIcon />
               </IconButton>
             ) : (
-              // Desktop: full search bar
               <Box
                 component="form"
                 role="search"
@@ -168,7 +164,6 @@ export default function Header({ categories }: { categories: Category[] }) {
               </Box>
             )}
 
-            {/* Desktop-only icons */}
             {!isMobile && (
               <>
                 <IconButton aria-label="cart" color="inherit">
@@ -185,7 +180,6 @@ export default function Header({ categories }: { categories: Category[] }) {
           </Box>
         </Toolbar>
 
-        {/* Bottom row (desktop categories) */}
         {!isMobile && (
           <Toolbar
             component="nav"
@@ -242,7 +236,6 @@ export default function Header({ categories }: { categories: Category[] }) {
           </Toolbar>
         )}
 
-        {/* Left drawer: categories + (mobile) account/cart right under them */}
         <Drawer
           anchor="left"
           open={drawerOpen}
@@ -261,7 +254,6 @@ export default function Header({ categories }: { categories: Category[] }) {
           <Box
             sx={{ height: "100%", display: "flex", flexDirection: "column" }}
           >
-            {/* Header row with back + title + close */}
             <Box
               sx={{
                 p: 2,
@@ -298,9 +290,7 @@ export default function Header({ categories }: { categories: Category[] }) {
 
             <Divider />
 
-            {/* Everything scrolls together (so Account/Cart stay just below the categories list) */}
             <Box sx={{ flex: 1, overflowY: "auto" }}>
-              {/* If no active category -> show top categories */}
               {!activeCategory && (
                 <List disablePadding>
                   {topCats.map((cat) =>
@@ -325,7 +315,6 @@ export default function Header({ categories }: { categories: Category[] }) {
                 </List>
               )}
 
-              {/* If active category -> show subcategories OR link to product list */}
               {activeCategory && (
                 <List disablePadding>
                   <ListItemButton
@@ -359,12 +348,10 @@ export default function Header({ categories }: { categories: Category[] }) {
                 </List>
               )}
 
-              {/* Mobile actions placed right after the categories list */}
               {isMobile && (
                 <>
                   <Divider sx={{ my: 1 }} />
                   <List disablePadding>
-                    {/* Account first */}
                     <ListItemButton onClick={() => setDrawerOpen(true)}>
                       <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
                         <AccountCircleIcon />
@@ -378,7 +365,6 @@ export default function Header({ categories }: { categories: Category[] }) {
           </Box>
         </Drawer>
 
-        {/* Top drawer: mobile search */}
         <Drawer
           anchor="top"
           open={searchOpen}
@@ -429,21 +415,17 @@ export default function Header({ categories }: { categories: Category[] }) {
       <Toolbar />
       {!isMobile && <Toolbar sx={{ minHeight: 44 }} />}
 
-      {/* Mobile floating cart button */}
       {isMobile && (
         <Box
           sx={{
             position: "fixed",
             right: 16,
             bottom: 16,
-            zIndex: (t) => t.zIndex.modal + 1, // above drawers/modals
+            zIndex: (t) => t.zIndex.modal + 1,
           }}
         >
           <IconButton
             aria-label="cart"
-            onClick={() => {
-              // intentionally no navigation (assignment requirement)
-            }}
             sx={{
               width: 52,
               height: 52,

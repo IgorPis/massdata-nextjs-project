@@ -39,7 +39,6 @@ export default function Hero({
         mb: { xs: 4, md: 6 },
       }}
     >
-      {/* Background image */}
       <Image
         src={imageSrc}
         alt={imageAlt}
@@ -49,7 +48,6 @@ export default function Hero({
         style={{ objectFit: "cover" }}
       />
 
-      {/* Overlay */}
       <Box
         sx={{
           position: "absolute",
@@ -59,7 +57,6 @@ export default function Hero({
         }}
       />
 
-      {/* Content */}
       <Container
         sx={{
           position: "absolute",
@@ -67,7 +64,7 @@ export default function Hero({
           display: "flex",
           alignItems: "flex-start",
           justifyContent: "flex-start",
-          pt: { xs: 8, md: 9 }, // slightly up
+          pt: { xs: 8, md: 9 },
           px: { xs: 2, md: 3 },
         }}
       >
@@ -75,7 +72,7 @@ export default function Hero({
           sx={{
             maxWidth: { xs: "100%", md: 980 },
             p: { xs: 3, md: 5 },
-            ml: { xs: 0, md: -3 }, // more left
+            ml: { xs: 0, md: -3 },
             bgcolor: "rgba(0,0,0,0.22)",
             border: "1px solid rgba(255,255,255,0.10)",
             borderRadius: 0,

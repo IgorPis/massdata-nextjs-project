@@ -46,7 +46,7 @@ export default function ProductPage({
   return (
     <>
       <Head>
-        <title>{`${product.name ?? "Product"} — Massdata`}</title>
+        <title>{`${product.name ?? "Product"} - Massdata`}</title>
         <meta
           name="description"
           content={`Buy ${product.name}. ${price ?? ""} ${currency ?? ""}`}
@@ -71,13 +71,11 @@ export default function ProductPage({
                 "@type": "Offer",
                 price: price ?? undefined,
                 priceCurrency: currency ?? undefined,
-                // availability: "https://schema.org/InStock",
                 url:
                   typeof window !== "undefined"
                     ? window.location.href
                     : undefined,
               },
-              // Optional: add product variants if you want; skipped for now
             }),
           }}
         />

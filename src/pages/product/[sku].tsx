@@ -1,4 +1,3 @@
-// src/pages/product/[sku].tsx
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -61,7 +60,6 @@ export default function ProductPage({
   categories: Category[];
   product: ProductDetail | null;
 }) {
-  // Hooks must always run (no early return before hooks)
   const [qty, setQty] = useState(1);
   const [selected, setSelected] = useState<Record<string, string>>({});
 
@@ -85,7 +83,6 @@ export default function ProductPage({
       .filter((o) => o.values.length > 0);
   }, [product]);
 
-  // Derived selection (no useEffect, avoids “setState in effect” warning)
   const resolvedSelected = useMemo(() => {
     if (options.length === 0) return selected;
 
@@ -113,10 +110,8 @@ export default function ProductPage({
     return out;
   }, [options, resolvedSelected]);
 
-  // Safe early return after hooks
   if (!product) return <div>Not found</div>;
 
-  // gallery
   const rawGallery = product.media_gallery_entries ?? [];
   const galleryAll = (rawGallery as (ProductImage | null | undefined)[]).filter(
     (img): img is ProductImage => Boolean(img && img.file)
@@ -140,7 +135,6 @@ export default function ProductPage({
 
   const asLowAs = formatMoney(finalPrice, currency);
 
-  // rating_summary in Magento is usually 0..100 → convert to /5
   const ratingSummary = product.rating_summary ?? null;
   const rating5 =
     ratingSummary != null ? (ratingSummary / 20).toFixed(1) : null;
@@ -152,11 +146,6 @@ export default function ProductPage({
     (product.categories ?? []).find((c): c is NonNullable<typeof c> =>
       Boolean(c?.id && c?.name)
     ) ?? null;
-
-  // const categoryText = (product.categories ?? [])
-  //   .filter((c): c is NonNullable<typeof c> => Boolean(c?.name))
-  //   .map((c) => c.name!)
-  //   .join(", ");
 
   const imageBase = "https://backend.reachdigital.dev/media/catalog/product";
 
@@ -175,7 +164,6 @@ export default function ProductPage({
       </Head>
 
       <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
-        {/* Top section: big image (left) + sticky buy box (right) */}
         <Box
           sx={{
             display: "grid",
@@ -184,7 +172,6 @@ export default function ProductPage({
             alignItems: "start",
           }}
         >
-          {/* LEFT: big white gallery */}
           <Paper
             sx={{
               p: { xs: 1.5, md: 2 },
@@ -262,7 +249,6 @@ export default function ProductPage({
             </Box>
           </Paper>
 
-          {/* RIGHT: sticky buy box */}
           <Box
             sx={{
               position: { md: "sticky" },
@@ -279,7 +265,6 @@ export default function ProductPage({
               }}
             >
               <Stack spacing={1.5}>
-                {/* Category chip */}
                 {mainCategory?.id && mainCategory?.name && (
                   <Box>
                     <Chip
@@ -313,7 +298,6 @@ export default function ProductPage({
                   </Typography>
                 ) : null}
 
-                {/* rating */}
                 {rating5 ? (
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Box
@@ -343,7 +327,6 @@ export default function ProductPage({
 
                 <Divider sx={{ borderColor: "rgba(255,255,255,0.08)" }} />
 
-                {/* options (only if configurable) */}
                 {options.length > 0 &&
                   options.map((opt) => (
                     <Box key={opt.uid}>
@@ -405,7 +388,6 @@ export default function ProductPage({
 
                 <Divider sx={{ borderColor: "rgba(255,255,255,0.08)" }} />
 
-                {/* qty + price row */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                   <Box
                     sx={{
@@ -469,7 +451,6 @@ export default function ProductPage({
                   </Box>
                 </Box>
 
-                {/* shipping card */}
                 <Paper
                   sx={{
                     p: 1.5,
@@ -515,7 +496,6 @@ export default function ProductPage({
                   Add to Cart
                 </Button>
 
-                {/* benefits */}
                 <Stack spacing={1} sx={{ pt: 1 }}>
                   {[
                     {
@@ -549,7 +529,6 @@ export default function ProductPage({
           </Box>
         </Box>
 
-        {/* Description section */}
         <Box
           sx={{
             mt: { xs: 4, md: 7 },
@@ -626,7 +605,6 @@ export default function ProductPage({
           </Stack>
         </Box>
 
-        {/* Specifications (GraphCommerce-style, no SKU) */}
         <Box sx={{ mt: { xs: 4, md: 7 } }}>
           <Typography variant="h5" sx={{ fontWeight: 900, mb: 2 }}>
             Product Specifications
@@ -648,21 +626,17 @@ export default function ProductPage({
               },
             }}
           >
-            {/* SKU */}
             <Typography className="specLabel">SKU</Typography>
             <Typography className="specValue">{product.sku}</Typography>
 
-            {/* Name */}
             <Typography className="specLabel">Name</Typography>
             <Typography className="specValue">{product.name}</Typography>
 
-            {/* Type */}
             <Typography className="specLabel">Type</Typography>
             <Typography className="specValue">
               {product.__typename ?? ""}
             </Typography>
 
-            {/* Category (each on new line) */}
             <Typography className="specLabel">Category</Typography>
             <Stack spacing={0.75}>
               {(product.categories ?? [])

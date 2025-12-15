@@ -3,7 +3,7 @@ import Link from "next/link";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/features/product/components/ProductCard/ProductCard";
 import { createApolloClient } from "@/lib/apolloClient";
 import {
   CategoriesDocument,
@@ -32,12 +32,10 @@ function findContextById(cats: CategoryNode[], id: string) {
     const siblings =
       ((top.children ?? []).filter(Boolean) as CategoryNode[]) ?? [];
 
-    // If user opened /category/<MenId> (top-level)
     if (String(top.id) === id) {
       return { current: top, siblings, parentName: top.name ?? null };
     }
 
-    // If user opened /category/<BusinessId> (child)
     const hit = siblings.find((c) => String(c?.id) === id);
     if (hit) {
       return { current: hit, siblings, parentName: top.name ?? null };
@@ -64,18 +62,6 @@ export default function CategoryPage({
     categories,
     categoryId
   );
-
-  // For testing
-  // if (process.env.NODE_ENV === "development") {
-  //   console.log("[Category SEO]", {
-  //     id: categoryId,
-  //     name: current?.name,
-  //     parentName,
-  //     meta_title: current?.meta_title,
-  //     meta_description: current?.meta_description,
-  //     description: current?.description,
-  //   });
-  // }
 
   const categoryName = current?.name ?? `Category ${categoryId}`;
   const description = stripHtml(current?.description);

@@ -19,11 +19,9 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
   const currency =
     product?.price_range?.minimum_price?.regular_price?.currency ?? "USD";
 
-  // Magento: rating_summary is 0..100 (0 means "no rating")
   const ratingSummary = product?.rating_summary ?? 0;
   const reviewCount = product?.review_count ?? 0;
 
-  // Always render stars; default to 0 (greyed/empty)
   const stars = Math.max(0, Math.min(5, ratingSummary / 20));
 
   const href = sku ? `/product/${encodeURIComponent(sku)}` : "#";
@@ -39,12 +37,11 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
         width: "100%",
       }}
     >
-      {/* IMAGE TILE */}
       <Box
         sx={{
           position: "relative",
           width: "100%",
-          aspectRatio: "1 / 1", // GraphCommerce style tile
+          aspectRatio: "1 / 1",
           borderRadius: 2,
           overflow: "hidden",
           bgcolor: "#fff",
@@ -62,9 +59,7 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
         ) : null}
       </Box>
 
-      {/* TEXT BELOW */}
       <Box sx={{ pt: 1.25 }}>
-        {/* Stars always visible (greyed when 0) */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
           <Rating
             size="small"
@@ -84,7 +79,6 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
           ) : null}
         </Box>
 
-        {/* name left, price right */}
         <Box
           sx={{
             mt: 0.75,

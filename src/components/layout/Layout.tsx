@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 import Head from "next/head";
 import { Box } from "@mui/material";
 import Header from "@/components/layout/Header/Header";
-import Footer from "@/components/Footer";
+import Footer from "@/components/layout/Footer/Footer";
 import type { Category } from "@/types/graphql";
 
 type LayoutProps = {
   categories?: Category[];
   children: ReactNode;
-};
+} & Record<string, unknown>;
 
 export default function Layout({ categories = [], children }: LayoutProps) {
   return (

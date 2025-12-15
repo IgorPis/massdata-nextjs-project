@@ -2,11 +2,10 @@ import { useMemo, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
 import { useReactiveVar } from "@apollo/client";
 
-import { cartVar } from "@/lib/cart";
+import { cartVar } from "@/state/cart/cartState";
+import { useIsMobile } from "@/features/layout/hooks/useIsMobile";
 import type { Category } from "@/types/graphql";
 
 import { isVisibleCategory } from "./categoryUtils";
@@ -20,8 +19,7 @@ export default function Header({ categories }: { categories: Category[] }) {
   const cart = useReactiveVar(cartVar);
   const count = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useIsMobile();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import type { GetServerSideProps } from "next";
 import { createApolloClient } from "@/lib/apolloClient";
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/features/product/components/ProductCard/ProductCard";
 import Hero from "@/components/home/Hero";
 import FeaturedCarousel from "@/components/home/FeaturedCarousel";
 import type { Category, ProductListItem } from "@/types/graphql";

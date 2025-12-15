@@ -10,22 +10,22 @@ export type CartItem = {
 
 export const cartVar = makeVar<CartItem[]>([]);
 
+const sameOptions = (
+  a?: Record<string, string>,
+  b?: Record<string, string>
+) => {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+
+  const aKeys = Object.keys(a).sort();
+  const bKeys = Object.keys(b).sort();
+  if (aKeys.length !== bKeys.length) return false;
+
+  return aKeys.every((k, i) => k === bKeys[i] && a[k] === b[k]);
+};
+
 export const addToCart = (item: CartItem) => {
   const cur = cartVar();
-
-  const sameOptions = (
-    a?: Record<string, string>,
-    b?: Record<string, string>
-  ) => {
-    if (!a && !b) return true;
-    if (!a || !b) return false;
-
-    const aKeys = Object.keys(a).sort();
-    const bKeys = Object.keys(b).sort();
-    if (aKeys.length !== bKeys.length) return false;
-
-    return aKeys.every((k, i) => k === bKeys[i] && a[k] === b[k]);
-  };
 
   const idx = cur.findIndex(
     (x) => x.sku === item.sku && sameOptions(x.options, item.options)
@@ -35,7 +35,8 @@ export const addToCart = (item: CartItem) => {
     const updated = [...cur];
     updated[idx] = { ...updated[idx], qty: updated[idx].qty + item.qty };
     cartVar(updated);
-  } else {
-    cartVar([...cur, item]);
+    return;
   }
+
+  cartVar([...cur, item]);
 };

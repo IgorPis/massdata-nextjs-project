@@ -3,7 +3,7 @@ import Head from "next/head";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { Box, Container } from "@mui/material";
 
-import { addToCart } from "@/lib/cart";
+import { addToCart } from "@/state/cart/cartState";
 import { createApolloClient } from "@/lib/apolloClient";
 import {
   CategoriesDocument,
